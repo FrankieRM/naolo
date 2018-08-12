@@ -22,12 +22,15 @@
 package net.kemitix.naolo.gateway.data.jpa;
 
 import net.kemitix.naolo.core.VeterinarianRepository;
+import net.kemitix.naolo.entities.VetSpecialisation;
 import net.kemitix.naolo.entities.Veterinarian;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -67,6 +70,28 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
         return entityManager
                 .createNamedQuery(VeterinarianJPA.FIND_ALL_VETS, Veterinarian.class)
                 .getResultStream();
+    }
+
+    @Override
+    public Veterinarian create(final String name, final Set<VetSpecialisation> specialisations) {
+        return fromJPA(
+                entityManager.merge(new VeterinarianJPA(null, name, specialisations.stream()
+                        .map(VetSpecialisationJPA::new)
+                        .collect(Collectors.toSet()))));
+    }
+
+    /**
+     * Converts VeterinarianJPA to core entity type.
+     */
+    private static Veterinarian fromJPA(final VeterinarianJPA source) {
+        return Veterinarian.create(
+                source.getId(),
+                source.getName(),
+                source.getSpecialisations()
+                        .stream()
+                        .map(VetSpecialisationJPA::getValue)
+                        .collect(Collectors.toSet())
+        );
     }
 
 }

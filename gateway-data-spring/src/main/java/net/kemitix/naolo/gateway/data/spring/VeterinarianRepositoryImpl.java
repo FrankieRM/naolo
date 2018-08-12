@@ -23,10 +23,12 @@ package net.kemitix.naolo.gateway.data.spring;
 
 import lombok.extern.log4j.Log4j2;
 import net.kemitix.naolo.core.VeterinarianRepository;
+import net.kemitix.naolo.entities.VetSpecialisation;
 import net.kemitix.naolo.entities.Veterinarian;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -57,6 +59,11 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
         log.info("findAll(): found {} veterinarians", all.size());
         return all.stream()
                 .map(VeterinarianRepositoryImpl::fromJPA);
+    }
+
+    @Override
+    public Veterinarian create(final String name, final Set<VetSpecialisation> specialisations) {
+        return fromJPA(repository.save(new VeterinarianJPA(null, name, specialisations)));
     }
 
     /**

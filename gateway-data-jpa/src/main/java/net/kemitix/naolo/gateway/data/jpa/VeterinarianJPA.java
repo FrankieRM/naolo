@@ -22,6 +22,7 @@
 package net.kemitix.naolo.gateway.data.jpa;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.kemitix.naolo.entities.Veterinarian;
 
@@ -35,6 +36,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "veterinarians")
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedNativeQueries({

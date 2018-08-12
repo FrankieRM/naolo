@@ -120,4 +120,23 @@ class JPATest implements WithAssertions {
         assertThat(entityManagerA).isNotNull().isNotSameAs(entityManagerB);
     }
 
+    @Provide
+    static Arbitrary<Set<VetSpecialisation>> specialisations() {
+        return Arbitraries.of(VetSpecialisation.class)
+                .set().ofMinSize(0).ofMaxSize(VetSpecialisation.values().length);
+    }
+
+    @Property
+    void canCreateAVeterinarian(
+            @ForAll final String name,
+            @ForAll("specialisations") final Set<VetSpecialisation> specialisations
+    ) {
+        //when
+        final Veterinarian veterinarian = veterinarianRepository.create(name, specialisations);
+        //then
+        assertThat(veterinarian.getId()).isNotNull();
+        assertThat(veterinarian).returns(name, Veterinarian::getName);
+        assertThat(veterinarian).returns(specialisations, Veterinarian::getSpecialisations);
+    }
+
 }

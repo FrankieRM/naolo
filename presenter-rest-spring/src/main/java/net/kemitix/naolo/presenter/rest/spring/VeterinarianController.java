@@ -19,62 +19,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.naolo.presenter.rest.jaxrs;
+package net.kemitix.naolo.presenter.rest.spring;
 
-import net.kemitix.naolo.core.VeterinariansListAll;
+import lombok.RequiredArgsConstructor;
+import net.kemitix.naolo.core.VeterinarianAdd;
+import net.kemitix.naolo.entities.VetSpecialisation;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import java.util.Objects;
+import java.net.URI;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-import static net.kemitix.naolo.core.VeterinariansListAll.request;
-
 /**
- * REST Controller for Veterinarians.
+ * REST Controller for individual Veterinarians.
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@Path("/vets")
-@ApplicationScoped
-public class VeterinariansController {
+@RestController
+@RequestMapping("/vet")
+@RequiredArgsConstructor
+public class VeterinarianController {
 
-    private final VeterinariansListAll listAll;
-
-    /**
-     * Default constructor.
-     */
-    VeterinariansController() {
-        listAll = null;
-    }
-
-    /**
-     * CDI Constructor.
-     *
-     * @param listAll the UseCase for List All Veterinarians
-     */
-    @Inject
-    VeterinariansController(final VeterinariansListAll listAll) {
-        this.listAll = Objects.requireNonNull(listAll, "JAX-RS List All Veterinarians Use Case");
-    }
+    private final VeterinarianAdd add;
 
     /**
      * List all Veterinarians endpoint.
      *
+     * @param name            the name of the new veterinarian
+     * @param specialisations the specialisations of the new veterinarian
      * @return the response
      * @throws ExecutionException   if there is an error completing the request
      * @throws InterruptedException if there is an error completing the request
      */
-    @GET
-    public Response allVets() throws ExecutionException, InterruptedException {
-        return Response.ok(
-                listAll.invoke(request())
-                        .thenApply(VeterinariansListAll.Response::getAllVeterinarians)
-                        .get())
-                .build();
+    @PostMapping
+    ResponseEntity<Void> add(
+            @RequestParam("name") final String name,
+            @RequestParam("specialisations") final Set<VetSpecialisation> specialisations
+    ) throws ExecutionException, InterruptedException {
+        final VeterinarianAdd.Request request = new VeterinarianAdd.Request(name, specialisations);
+        final URI uri = add.invoke(request)
+                .thenApply(VeterinarianAdd.Response::getId)
+                .thenApply(id -> URI.create("/vet/" + id))
+                .get();
+        return ResponseEntity.created(uri).build();
     }
 
 }

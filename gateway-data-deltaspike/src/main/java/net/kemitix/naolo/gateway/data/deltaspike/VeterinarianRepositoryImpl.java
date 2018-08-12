@@ -28,6 +28,7 @@ import net.kemitix.naolo.entities.Veterinarian;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,7 +64,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
                 source.getId(),
                 source.getName(),
                 source.getSpecialisations().stream()
-                        .map(VetSpecialisation::valueOf)
+                        .map(VetSpecialisationJPA::getValue)
                         .collect(Collectors.toSet()));
     }
 
@@ -75,6 +76,15 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
     @Override
     public Stream<Veterinarian> findAll() {
         return repository.findAll()
+                .stream()
                 .map(VeterinarianRepositoryImpl::fromJPA);
+    }
+
+    @Override
+    public Veterinarian create(final String name, final Set<VetSpecialisation> specialisations) {
+        final Set<VetSpecialisationJPA> vetSpecialisationJPASet = specialisations.stream()
+                .map(VetSpecialisationJPA::new).collect(Collectors.toSet());
+        final VeterinarianJPA veterinarianJPA = new VeterinarianJPA(null, name, vetSpecialisationJPASet);
+        return fromJPA(repository.save(veterinarianJPA));
     }
 }

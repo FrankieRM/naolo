@@ -40,6 +40,7 @@
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <geronimo-jcdi_2.0_spec.version>1.1</geronimo-jcdi_2.0_spec.version>
         <geronimo-atinject_1.0_spec.version>1.1</geronimo-atinject_1.0_spec.version>
+        <jersey-test-framework.version>2.27</jersey-test-framework.version>
     </properties>
 
     <dependencyManagement>
@@ -190,6 +191,11 @@
                 <groupId>net.jqwik</groupId>
                 <artifactId>jqwik</artifactId>
                 <version>${jqwik.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+                <artifactId>jersey-test-framework-provider-jdk-http</artifactId>
+                <version>${jersey-test-framework.version}</version>
             </dependency>
 
         </dependencies>

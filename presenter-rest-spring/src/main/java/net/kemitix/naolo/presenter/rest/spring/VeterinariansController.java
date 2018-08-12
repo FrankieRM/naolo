@@ -49,7 +49,7 @@ public final class VeterinariansController {
     /**
      * List all Veterinarians endpoint.
      *
-     * @return the respone
+     * @return the response
      * @throws ExecutionException   if there is an error completing the request
      * @throws InterruptedException if there is an error completing the request
      */

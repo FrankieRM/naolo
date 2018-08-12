@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -22,7 +23,6 @@ class DeltaSpikeTest implements WithAssertions {
     private final String unitName = dataConfig.gatewayUnitName();
     private final EntityManagerProducer entityManagerProducer = new EntityManagerProducer(unitName);
     private final EntityManagerFactory entityManagerFactory = entityManagerProducer.entityManagerFactory();
-    private final EntityManager entityManager = entityManagerProducer.entityManager(entityManagerFactory);
     private final VeterinarianRepositoryDeltaSpike veterinarianRepositoryDeltaSpike =
             mock(VeterinarianRepositoryDeltaSpike.class);
     private final VeterinarianRepositoryImpl veterinarianRepository =
@@ -41,7 +41,7 @@ class DeltaSpikeTest implements WithAssertions {
                             veterinarianJPA.setName(name);
                             veterinarianJPA.getSpecialisations().addAll(
                                     specialisations.stream()
-                                            .map(Enum::toString)
+                                            .map(VetSpecialisationJPA::new)
                                             .collect(Collectors.toList())
                             );
                             return Tuple.of(
@@ -59,7 +59,7 @@ class DeltaSpikeTest implements WithAssertions {
         //given
         final List<VeterinarianJPA> veterinarians =
                 vetTuples.stream().map(Tuple.Tuple2::get1).collect(Collectors.toList());
-        given(veterinarianRepositoryDeltaSpike.findAll()).willReturn(veterinarians.stream());
+        given(veterinarianRepositoryDeltaSpike.findAll()).willReturn(veterinarians);
         //when
         final List<Veterinarian> result = veterinarianRepository.findAll().collect(Collectors.toList());
         //then
@@ -107,6 +107,39 @@ class DeltaSpikeTest implements WithAssertions {
         final EntityManager entityManagerB = entityManagerProducer.entityManager(entityManagerFactory);
         //then
         assertThat(entityManagerA).isNotNull().isNotSameAs(entityManagerB);
+    }
+
+    @Provide
+    static Arbitrary<Set<VetSpecialisation>> specialisations() {
+        return Arbitraries.of(VetSpecialisation.class)
+                .set().ofMinSize(0).ofMaxSize(VetSpecialisation.values().length);
+    }
+
+    @Property
+    void canCreateAVeterinarian(
+            @ForAll final Long id,
+            @ForAll final String name,
+            @ForAll("specialisations") Set<VetSpecialisation> specialisations
+    ) {
+        //given
+        final VeterinarianJPA veterinarianJPA = new VeterinarianJPA();
+        veterinarianJPA.setId(id);
+        veterinarianJPA.setName(name);
+        final Set<VetSpecialisationJPA> specialisationJPAs =
+                specialisations.stream().map(VetSpecialisationJPA::new).collect(Collectors.toSet());
+        veterinarianJPA.setSpecialisations(specialisationJPAs);
+        given(veterinarianRepositoryDeltaSpike.save(any())).willReturn(veterinarianJPA);
+        //when
+        final Veterinarian veterinarian = veterinarianRepository.create(name, specialisations);
+        //then
+        assertThat(veterinarian).returns(id, Veterinarian::getId);
+        assertThat(veterinarian).returns(name, Veterinarian::getName);
+        assertThat(veterinarian).returns(specialisations, Veterinarian::getSpecialisations);
+    }
+
+    @Test
+    void noArgsConstructorForVetSpecialisationJPA() {
+        assertThat(new VetSpecialisationJPA()).isNotNull();
     }
 
 }

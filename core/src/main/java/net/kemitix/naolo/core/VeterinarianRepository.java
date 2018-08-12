@@ -21,8 +21,10 @@
 
 package net.kemitix.naolo.core;
 
+import net.kemitix.naolo.entities.VetSpecialisation;
 import net.kemitix.naolo.entities.Veterinarian;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -39,4 +41,12 @@ public interface VeterinarianRepository {
      */
     Stream<Veterinarian> findAll();
 
+    /**
+     * Create a new Veterinarian.
+     *
+     * @param name            the veterinarian's name
+     * @param specialisations the set of any specialisations
+     * @return the created Veterinarian
+     */
+    Veterinarian create(String name, Set<VetSpecialisation> specialisations);
 }

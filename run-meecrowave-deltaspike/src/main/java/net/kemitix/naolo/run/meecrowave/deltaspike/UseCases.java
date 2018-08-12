@@ -21,6 +21,8 @@
 
 package net.kemitix.naolo.run.meecrowave.deltaspike;
 
+import net.kemitix.naolo.core.UseCaseFactory;
+import net.kemitix.naolo.core.VeterinarianAdd;
 import net.kemitix.naolo.core.VeterinarianRepository;
 import net.kemitix.naolo.core.VeterinariansListAll;
 
@@ -31,17 +33,18 @@ import javax.enterprise.inject.Produces;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-class UseCases {
+class UseCases implements UseCaseFactory {
 
-    /**
-     * This implementation creates the List All Veterinarians Use Case.
-     *
-     * @param veterinariansRepository the repository for Veterinarians
-     * @return the Use Case
-     */
     @Produces
+    @Override
     public VeterinariansListAll veterinariansListAll(final VeterinarianRepository veterinariansRepository) {
         return VeterinariansListAll.create(veterinariansRepository);
+    }
+
+    @Produces
+    @Override
+    public VeterinarianAdd veterinarianAdd(final VeterinarianRepository veterinarianRepository) {
+        return new VeterinarianAdd(veterinarianRepository);
     }
 
 }

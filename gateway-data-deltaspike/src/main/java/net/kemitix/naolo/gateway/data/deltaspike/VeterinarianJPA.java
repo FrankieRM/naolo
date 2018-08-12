@@ -21,6 +21,7 @@
 
 package net.kemitix.naolo.gateway.data.deltaspike;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,6 +40,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 class VeterinarianJPA {
 
     @Id
@@ -47,8 +49,7 @@ class VeterinarianJPA {
 
     private String name;
 
-    @ElementCollection
-    @CollectionTable(name = "veterinarian_specialisations")
-    private final Set<String> specialisations = new HashSet<>();
+    @ManyToMany
+    private Set<VetSpecialisationJPA> specialisations = new HashSet<>();
 
 }

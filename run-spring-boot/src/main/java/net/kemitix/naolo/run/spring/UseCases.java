@@ -21,6 +21,8 @@
 
 package net.kemitix.naolo.run.spring;
 
+import net.kemitix.naolo.core.UseCaseFactory;
+import net.kemitix.naolo.core.VeterinarianAdd;
 import net.kemitix.naolo.core.VeterinarianRepository;
 import net.kemitix.naolo.core.VeterinariansListAll;
 import org.springframework.context.annotation.Bean;
@@ -32,17 +34,17 @@ import org.springframework.context.annotation.Configuration;
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @Configuration
-class UseCases {
+class UseCases implements UseCaseFactory {
 
-    /**
-     * UseCase for List All Veterinarians.
-     *
-     * @param veterinarianRepository the Veterinarian Repository
-     * @return the UseCase
-     */
     @Bean
-    VeterinariansListAll veterinariansListAll(final VeterinarianRepository veterinarianRepository) {
+    @Override
+    public VeterinariansListAll veterinariansListAll(final VeterinarianRepository veterinarianRepository) {
         return VeterinariansListAll.create(veterinarianRepository);
     }
 
+    @Bean
+    @Override
+    public VeterinarianAdd veterinarianAdd(final VeterinarianRepository veterinarianRepository) {
+        return new VeterinarianAdd(veterinarianRepository);
+    }
 }

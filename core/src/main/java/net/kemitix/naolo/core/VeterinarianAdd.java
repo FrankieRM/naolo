@@ -21,75 +21,56 @@
 
 package net.kemitix.naolo.core;
 
+import net.kemitix.naolo.entities.VetSpecialisation;
 import net.kemitix.naolo.entities.Veterinarian;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
- * Use-case to list all {@link Veterinarian}s.
+ * Use-case to add a {@link Veterinarian}.
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@SuppressWarnings("finalclass")
-public class VeterinariansListAll
-        implements UseCase<VeterinariansListAll.Request, VeterinariansListAll.Response> {
-
-    private static final Request REQUEST = new Request() {
-    };
+public class VeterinarianAdd
+        implements UseCase<VeterinarianAdd.Request, VeterinarianAdd.Response> {
 
     private final VeterinarianRepository repository;
 
     /**
-     * Constructor.
+     * Create a new {@VeterinarianAdd} use-case.
      *
      * @param repository the Veterinarian Repository
      */
-    public VeterinariansListAll(final VeterinarianRepository repository) {
+    public VeterinarianAdd(final VeterinarianRepository repository) {
         this.repository = repository;
     }
 
-    /**
-     * Creates a new {@link VeterinariansListAll} use-case.
-     *
-     * @param veterinarianRepository the Veterinarian repository
-     * @return a new VeterinariansListAll use-case
-     */
-    public static VeterinariansListAll create(final VeterinarianRepository veterinarianRepository) {
-        return new VeterinariansListAll(veterinarianRepository);
-    }
-
-    /**
-     * Returns the empty request.
-     *
-     * @return the empty request object
-     */
-    public static Request request() {
-        return REQUEST;
-    }
-
-    /**
-     * Invoke the UseCase.
-     *
-     * <p>This implementation requires the parameter to be {@link #request()}.</p>
-     *
-     * @param request the result of {@link #request()}
-     * @return the Response
-     */
     @Override
-    public CompletableFuture<Response> invoke(final Request request) {
+    public final CompletableFuture<Response> invoke(final Request request) {
         return CompletableFuture.supplyAsync(() -> () ->
-                repository.findAll().collect(Collectors.toList()));
+                repository.create(request.name, request.specialisations)
+                        .getId());
     }
 
     /**
-     * Empty Request Parameter.
-     *
-     * <p>Use the {@link #request()} to obtain an instance.</p>
+     * Request for creating a new {@link Veterinarian}.
      */
-    interface Request {
+    public static class Request {
+        private final String name;
+        private final Set<VetSpecialisation> specialisations;
 
+        /**
+         * Constructor for Add a Veterinarian Request.
+         *
+         * @param name            the name of the new Veterinarian
+         * @param specialisations any specialisations of the new veterinarian
+         */
+        public Request(final String name, final Set<VetSpecialisation> specialisations) {
+            this.name = name;
+            this.specialisations = new HashSet<>(specialisations);
+        }
     }
 
     /**
@@ -98,12 +79,10 @@ public class VeterinariansListAll
     public interface Response {
 
         /**
-         * The list of all Veterinarians.
+         * The Id of the created Veterinarian.
          *
-         * @return the list of all Veterinarians
+         * @return the veterinarian Id
          */
-        List<Veterinarian> getAllVeterinarians();
-
+        Long getId();
     }
-
 }

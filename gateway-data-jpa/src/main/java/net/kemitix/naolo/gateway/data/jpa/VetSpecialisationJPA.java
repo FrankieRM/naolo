@@ -22,6 +22,7 @@
 package net.kemitix.naolo.gateway.data.jpa;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.kemitix.naolo.entities.VetSpecialisation;
 
@@ -32,6 +33,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "vet_specialisations")
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 class VetSpecialisationJPA {

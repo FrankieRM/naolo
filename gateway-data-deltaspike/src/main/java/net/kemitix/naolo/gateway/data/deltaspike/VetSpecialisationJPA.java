@@ -19,32 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.naolo.run.meecrowave.jpa;
-
-import net.kemitix.naolo.core.UseCaseFactory;
-import net.kemitix.naolo.core.VeterinarianAdd;
-import net.kemitix.naolo.core.VeterinarianRepository;
-import net.kemitix.naolo.core.VeterinariansListAll;
-
-import javax.enterprise.inject.Produces;
+package net.kemitix.naolo.gateway.data.deltaspike;
 
 /**
- * Configure UseCases for Meecrowave.
- *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-class UseCases implements UseCaseFactory {
 
-    @Produces
-    @Override
-    public VeterinariansListAll veterinariansListAll(final VeterinarianRepository veterinariansRepository) {
-        return VeterinariansListAll.create(veterinariansRepository);
-    }
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import net.kemitix.naolo.entities.VetSpecialisation;
 
-    @Produces
-    @Override
-    public VeterinarianAdd veterinarianAdd(final VeterinarianRepository veterinarianRepository) {
-        return new VeterinarianAdd(veterinarianRepository);
-    }
+import javax.persistence.*;
+
+/**
+ * @author Paul Campbell (pcampbell@kemitix.net)
+ */
+@Entity
+@Table(name = "vet_specialisations")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+class VetSpecialisationJPA {
+
+    @Id
+    @Enumerated(EnumType.STRING)
+    private VetSpecialisation value;
 
 }

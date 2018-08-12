@@ -21,9 +21,8 @@
 
 package net.kemitix.naolo.gateway.data.deltaspike;
 
+import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.Repository;
-
-import java.util.stream.Stream;
 
 /**
  * Spring Repository for Veterinarians.
@@ -31,12 +30,5 @@ import java.util.stream.Stream;
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @Repository(forEntity = VeterinarianJPA.class)
-public interface VeterinarianRepositoryDeltaSpike {
-
-    /**
-     * Finds all Veterinatians.
-     *
-     * @return a Stream of Veterinarians
-     */
-    Stream<VeterinarianJPA> findAll();
+public interface VeterinarianRepositoryDeltaSpike extends EntityRepository<VeterinarianJPA, Long> {
 }

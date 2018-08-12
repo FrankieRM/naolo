@@ -19,32 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.naolo.run.meecrowave.jpa;
-
-import net.kemitix.naolo.core.UseCaseFactory;
-import net.kemitix.naolo.core.VeterinarianAdd;
-import net.kemitix.naolo.core.VeterinarianRepository;
-import net.kemitix.naolo.core.VeterinariansListAll;
-
-import javax.enterprise.inject.Produces;
+package net.kemitix.naolo.core;
 
 /**
- * Configure UseCases for Meecrowave.
+ * Defines the factory methods for creating instances of UseCases.
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-class UseCases implements UseCaseFactory {
+public interface UseCaseFactory {
 
-    @Produces
-    @Override
-    public VeterinariansListAll veterinariansListAll(final VeterinarianRepository veterinariansRepository) {
-        return VeterinariansListAll.create(veterinariansRepository);
-    }
+    /**
+     * UseCase for List All Veterinarians.
+     *
+     * @param veterinarianRepository the Veterinarian Repository
+     * @return the UseCase
+     */
+    VeterinariansListAll veterinariansListAll(VeterinarianRepository veterinarianRepository);
 
-    @Produces
-    @Override
-    public VeterinarianAdd veterinarianAdd(final VeterinarianRepository veterinarianRepository) {
-        return new VeterinarianAdd(veterinarianRepository);
-    }
-
+    /**
+     * USeCase for Add Veterinarian.
+     *
+     * @param veterinarianRepository the Veterinarian Repository
+     * @return the UseCase
+     */
+    VeterinarianAdd veterinarianAdd(VeterinarianRepository veterinarianRepository);
 }

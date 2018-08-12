@@ -1,6 +1,7 @@
 package net.kemitix.naolo.run.spring;
 
 import net.kemitix.naolo.core.UseCase;
+import net.kemitix.naolo.core.VeterinarianAdd;
 import net.kemitix.naolo.core.VeterinarianRepository;
 import net.kemitix.naolo.core.VeterinariansListAll;
 import org.assertj.core.api.WithAssertions;
@@ -18,6 +19,14 @@ class UseCasesTest implements WithAssertions {
     void hasListAllVeterinariansUseCase() {
         //given
         final VeterinariansListAll useCase = useCases.veterinariansListAll(veterinarianRepository);
+        //then
+        assertThat(useCase).isInstanceOf(UseCase.class);
+    }
+
+    @Test
+    void hasAddVeterinarianUseCase() {
+        //given
+        final VeterinarianAdd useCase = useCases.veterinarianAdd(veterinarianRepository);
         //then
         assertThat(useCase).isInstanceOf(UseCase.class);
     }

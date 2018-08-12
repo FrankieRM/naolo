@@ -25,7 +25,7 @@ class VeterinariansListAllTest implements WithAssertions {
     private final VeterinariansListAll useCase = VeterinariansListAll.create(repository);
 
     @Property
-    void listAll(
+    void listsAllVeterinarians(
             @ForAll("vets") final List<Veterinarian> vets
     ) throws ExecutionException, InterruptedException {
         //given

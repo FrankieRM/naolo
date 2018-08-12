@@ -53,7 +53,7 @@ public final class Veterinarian {
      * @param name            the Veterinarians Name
      * @param specialisations the Specialisations of the Veterinarian
      */
-    public Veterinarian(final long id,
+    public Veterinarian(final Long id,
                         final String name,
                         final Set<VetSpecialisation> specialisations) {
         this.id = id;

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -56,4 +57,24 @@ class VeterinarianRepositoryImplTest implements WithAssertions {
                 .list().ofMinSize(0).ofMaxSize(MAX_VETERINARIANS);
     }
 
+    @Property
+    void canAddAVeterinarian(
+            @ForAll final String name,
+            @ForAll("specialisations") Set<VetSpecialisation> specialisations
+    ) {
+        //given
+        final VeterinarianJPA veterinarianJPA = new VeterinarianJPA(1L, name, specialisations);
+        given(springRepo.save(any(VeterinarianJPA.class))).willReturn(veterinarianJPA);
+        //when
+        final Veterinarian veterinarian = repository.create(name, specialisations);
+        //then
+        assertThat(veterinarian).returns(name, Veterinarian::getName);
+        assertThat(veterinarian).returns(specialisations, Veterinarian::getSpecialisations);
+    }
+
+    @Provide
+    static Arbitrary<Set<VetSpecialisation>> specialisations() {
+        return Arbitraries.of(VetSpecialisation.class)
+                .set().ofMinSize(0).ofMaxSize(VetSpecialisation.values().length);
+    }
 }

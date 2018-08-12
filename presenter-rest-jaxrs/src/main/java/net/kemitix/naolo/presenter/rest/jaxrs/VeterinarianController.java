@@ -21,59 +21,66 @@
 
 package net.kemitix.naolo.presenter.rest.jaxrs;
 
-import net.kemitix.naolo.core.VeterinariansListAll;
+import net.kemitix.naolo.core.VeterinarianAdd;
+import net.kemitix.naolo.entities.VetSpecialisation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
-
-import static net.kemitix.naolo.core.VeterinariansListAll.request;
 
 /**
  * REST Controller for Veterinarians.
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@Path("/vets")
+@Path("/vet")
 @ApplicationScoped
-public class VeterinariansController {
+public class VeterinarianController {
 
-    private final VeterinariansListAll listAll;
+    private final VeterinarianAdd addUseCase;
 
     /**
      * Default constructor.
      */
-    VeterinariansController() {
-        listAll = null;
+    VeterinarianController() {
+        addUseCase = null;
     }
 
     /**
      * CDI Constructor.
      *
-     * @param listAll the UseCase for List All Veterinarians
+     * @param addUseCase the UseCase for Add a Veterinarian
      */
     @Inject
-    VeterinariansController(final VeterinariansListAll listAll) {
-        this.listAll = Objects.requireNonNull(listAll, "JAX-RS List All Veterinarians Use Case");
+    VeterinarianController(final VeterinarianAdd addUseCase) {
+        this.addUseCase = Objects.requireNonNull(addUseCase);
     }
 
     /**
-     * List all Veterinarians endpoint.
+     * Add a new Veterinarian.
      *
+     * @param name            the name of the new Veterinarian
+     * @param specialisations the specialisations of the new veterinarian
      * @return the response
      * @throws ExecutionException   if there is an error completing the request
      * @throws InterruptedException if there is an error completing the request
      */
-    @GET
-    public Response allVets() throws ExecutionException, InterruptedException {
-        return Response.ok(
-                listAll.invoke(request())
-                        .thenApply(VeterinariansListAll.Response::getAllVeterinarians)
-                        .get())
+    @POST
+    public final Response add(
+            @QueryParam("name") final String name,
+            @QueryParam("specialisations") final Set<VetSpecialisation> specialisations
+    ) throws ExecutionException, InterruptedException {
+        return Response.created(
+                URI.create("/vet/" + addUseCase.invoke(new VeterinarianAdd.Request(name, specialisations))
+                        .thenApply(VeterinarianAdd.Response::getId)
+                        .get()))
                 .build();
     }
 
