@@ -21,7 +21,7 @@
 
 package net.kemitix.naolo.gateway.data.common;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
@@ -35,7 +35,7 @@ import javax.persistence.Persistence;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@Log4j2
+@Slf4j
 @ApplicationScoped
 public class EntityManagerProducer {
 

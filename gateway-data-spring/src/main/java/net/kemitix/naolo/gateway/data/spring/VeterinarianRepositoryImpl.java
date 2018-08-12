@@ -21,7 +21,7 @@
 
 package net.kemitix.naolo.gateway.data.spring;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import net.kemitix.naolo.core.VeterinarianRepository;
 import net.kemitix.naolo.entities.VetSpecialisation;
 import net.kemitix.naolo.entities.Veterinarian;
@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@Log4j2
+@Slf4j
 @Repository
 class VeterinarianRepositoryImpl implements VeterinarianRepository {
 
