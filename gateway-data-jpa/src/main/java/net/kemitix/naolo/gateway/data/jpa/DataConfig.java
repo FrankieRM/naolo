@@ -21,6 +21,7 @@
 
 package net.kemitix.naolo.gateway.data.jpa;
 
+import lombok.extern.slf4j.Slf4j;
 import net.kemitix.naolo.gateway.data.common.GatewayPersistenceUnitName;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,6 +32,7 @@ import javax.enterprise.inject.Produces;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@Slf4j
 @ApplicationScoped
 public class DataConfig {
 
@@ -42,7 +44,9 @@ public class DataConfig {
     @Produces
     @GatewayPersistenceUnitName
     public String gatewayUnitName() {
-        return getClass().getPackage().getName();
+        final String unitName = getClass().getPackage().getName();
+        log.debug("Define Gateway Unit Name: {}", unitName);
+        return unitName;
     }
 
 }

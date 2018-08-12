@@ -21,6 +21,7 @@
 
 package net.kemitix.naolo.gateway.data.jpa;
 
+import lombok.extern.slf4j.Slf4j;
 import net.kemitix.naolo.core.VeterinarianRepository;
 import net.kemitix.naolo.entities.VetSpecialisation;
 import net.kemitix.naolo.entities.Veterinarian;
@@ -38,6 +39,7 @@ import java.util.stream.Stream;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@Slf4j
 @ApplicationScoped
 class VeterinarianRepositoryImpl implements VeterinarianRepository {
 
@@ -57,7 +59,23 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
      */
     @Inject
     VeterinarianRepositoryImpl(final EntityManager entityManager) {
+        log.debug("Create Veterinarian Repository");
         this.entityManager = Objects.requireNonNull(entityManager, "EntityManager");
+    }
+
+    /**
+     * Converts VeterinarianJPA to core entity type.
+     */
+    private static Veterinarian fromJPA(final VeterinarianJPA source) {
+        log.trace("fromJPA: {} - {}", source.getId(), source.getName());
+        return Veterinarian.create(
+                source.getId(),
+                source.getName(),
+                source.getSpecialisations()
+                        .stream()
+                        .map(VetSpecialisationJPA::getValue)
+                        .collect(Collectors.toSet())
+        );
     }
 
     /**
@@ -67,6 +85,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
      */
     @Override
     public Stream<Veterinarian> findAll() {
+        log.debug("findAll: Find all veterinarians");
         return entityManager
                 .createNamedQuery(VeterinarianJPA.FIND_ALL_VETS, Veterinarian.class)
                 .getResultStream();
@@ -74,24 +93,13 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
 
     @Override
     public Veterinarian create(final String name, final Set<VetSpecialisation> specialisations) {
-        return fromJPA(
-                entityManager.merge(new VeterinarianJPA(null, name, specialisations.stream()
-                        .map(VetSpecialisationJPA::new)
-                        .collect(Collectors.toSet()))));
-    }
-
-    /**
-     * Converts VeterinarianJPA to core entity type.
-     */
-    private static Veterinarian fromJPA(final VeterinarianJPA source) {
-        return Veterinarian.create(
-                source.getId(),
-                source.getName(),
-                source.getSpecialisations()
-                        .stream()
-                        .map(VetSpecialisationJPA::getValue)
-                        .collect(Collectors.toSet())
-        );
+        log.debug("create: Creating Veterinarian '{}' with specialisations {}", name, specialisations);
+        final Set<VetSpecialisationJPA> specialisationsJPA = specialisations.stream()
+                .map(VetSpecialisationJPA::new).collect(Collectors.toSet());
+        final VeterinarianJPA veterinarianJPA = new VeterinarianJPA(null, name, specialisationsJPA);
+        final VeterinarianJPA saved = entityManager.merge(veterinarianJPA);
+        log.debug("created: Created Veterinarian id:{} '{}'", saved.getId(), name);
+        return fromJPA(saved);
     }
 
 }

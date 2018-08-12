@@ -47,23 +47,9 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
      *
      * @param repository the Spring Data repository
      */
-    VeterinarianRepositoryImpl(
-            final VeterinarianRepositorySpring repository
-    ) {
+    VeterinarianRepositoryImpl(final VeterinarianRepositorySpring repository) {
+        log.debug("Create Veterinarian Repository");
         this.repository = repository;
-    }
-
-    @Override
-    public Stream<Veterinarian> findAll() {
-        final List<VeterinarianJPA> all = repository.findAll();
-        log.info("findAll(): found {} veterinarians", all.size());
-        return all.stream()
-                .map(VeterinarianRepositoryImpl::fromJPA);
-    }
-
-    @Override
-    public Veterinarian create(final String name, final Set<VetSpecialisation> specialisations) {
-        return fromJPA(repository.save(new VeterinarianJPA(null, name, specialisations)));
     }
 
     /**
@@ -74,6 +60,23 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
                 source.getId(),
                 source.getName(),
                 source.getSpecialisations());
+    }
+
+    @Override
+    public Stream<Veterinarian> findAll() {
+        log.debug("findAll: Find all veterinarians");
+        final List<VeterinarianJPA> all = repository.findAll();
+        log.info("findAll: Found {} veterinarians", all.size());
+        return all.stream()
+                .map(VeterinarianRepositoryImpl::fromJPA);
+    }
+
+    @Override
+    public Veterinarian create(final String name, final Set<VetSpecialisation> specialisations) {
+        log.debug("create: Creating Veterinarian '{}' with specialisations {}", name, specialisations);
+        final VeterinarianJPA saved = repository.save(new VeterinarianJPA(null, name, specialisations));
+        log.debug("created: Created Veterinarian id:{} '{}'", saved.getId(), name);
+        return fromJPA(saved);
     }
 
 }

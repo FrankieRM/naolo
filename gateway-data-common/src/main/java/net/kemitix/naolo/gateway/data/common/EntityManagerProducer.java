@@ -55,6 +55,7 @@ public class EntityManagerProducer {
      */
     @Inject
     public EntityManagerProducer(@GatewayPersistenceUnitName final String unitName) {
+        log.debug("Create EntityManagerProducer for {}", unitName);
         this.unitName = unitName;
     }
 
