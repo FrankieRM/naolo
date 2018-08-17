@@ -2,5 +2,5 @@
 
 set -e
 
-mvn install -pl run-meecrowave-deltaspike -am
+[ "$1" == "install" ] && mvn install -pl run-meecrowave-deltaspike -am
 mvn meecrowave:run -pl run-meecrowave-deltaspike
