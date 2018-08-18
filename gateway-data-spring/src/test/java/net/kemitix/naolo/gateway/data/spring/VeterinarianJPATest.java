@@ -38,24 +38,6 @@ class VeterinarianJPATest implements WithAssertions {
     }
 
     @Property
-    void requireName(
-            @ForAll final Long id,
-            @ForAll("vetSpecialisations") final Set<VetSpecialisation> specialisations
-    ) {
-        assertThatNullPointerException().isThrownBy(() ->
-                new VeterinarianJPA(id, null, specialisations));
-    }
-
-    @Property
-    void requireSpecialisation(
-            @ForAll final Long id,
-            @ForAll final String name
-    ) {
-        assertThatNullPointerException().isThrownBy(() ->
-                new VeterinarianJPA(id, name, null));
-    }
-
-    @Property
     void hasGetters(
             @ForAll final Long id,
             @ForAll final String name,

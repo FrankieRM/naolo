@@ -24,11 +24,11 @@ package net.kemitix.naolo.gateway.data.spring;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import net.kemitix.naolo.entities.VetSpecialisation;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -46,15 +46,15 @@ class VeterinarianJPA {
     @Id
     @GeneratedValue
     private Long id;
-    @NonNull
     private String name;
-    @NonNull
     @ElementCollection
     @CollectionTable(name = "veterinarian_specialisations")
     @Enumerated(EnumType.STRING)
     private Set<VetSpecialisation> specialisations;
 
     Set<VetSpecialisation> getSpecialisations() {
-        return new HashSet<>(specialisations);
+        return Optional.ofNullable(specialisations)
+                .map(HashSet::new)
+                .orElseGet(HashSet::new);
     }
 }
