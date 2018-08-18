@@ -175,38 +175,66 @@
 
 **** List all Veterinarians
 
-     =GET /vets=
+***** Request
 
-     #+BEGIN_SRC java
-       [
-        {
-            "id": 1,
-                "name": "Conah Feeney",
-                "specialisations": [
-                                    "RADIOLOGY"
-                                    ]
-                },
-        {
-            "id": 2,
-                "name": "Austin Santiago",
-                "specialisations": [
-                                    "DENTISTRY"
-                                    ]
-                },
-        {
-            "id": 3,
-                "name": "Violet Holmes",
-                "specialisations": [
-                                    "DENTISTRY",
-                                    "SURGERY"
-                                    ]
-                }
-        ]
-     #+END_SRC
+      #+BEGIN_SRC plain
+      GET /vets
+      #+END_SRC
+
+***** Response
+
+      #+BEGIN_SRC json
+        [
+         {
+             "id": 1,
+                 "name": "Conah Feeney",
+                 "specialisations": [
+                                     "RADIOLOGY"
+                                     ]
+                 },
+         {
+             "id": 2,
+                 "name": "Austin Santiago",
+                 "specialisations": [
+                                     "DENTISTRY"
+                                     ]
+                 },
+         {
+             "id": 3,
+                 "name": "Violet Holmes",
+                 "specialisations": [
+                                     "DENTISTRY",
+                                     "SURGERY"
+                                     ]
+                 }
+         ]
+      #+END_SRC
 
 **** Add a Veterinarian
 
-     =POST /vet=
+***** Request
+
+      #+BEGIN_SRC json
+      POST http://localhost:8080/vet
+      Content-Type: application/json
+      Accept: application/json
+
+      {
+      "name": "bob newman",
+      "specialisations": ["SURGERY", "RADIOLOGY"]
+      }
+      #+END_SRC
+
+***** Response
+
+      #+BEGIN_SRC plain
+      HTTP/1.1 201 
+      Location: /vet/12
+      Content-Length: 0
+      Date: Sat, 18 Aug 2018 13:54:14 GMT
+
+      <Response body is empty>
+      #+END_SRC
 
 **** Get a Veterinarian
 
