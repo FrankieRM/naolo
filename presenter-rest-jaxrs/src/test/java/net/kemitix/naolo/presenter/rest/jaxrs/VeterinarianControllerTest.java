@@ -44,8 +44,11 @@ class VeterinarianControllerTest implements WithAssertions {
         //given
         final Veterinarian veterinarian = new Veterinarian(id, name, specialisations);
         given(repository.create(eq(name), any())).willReturn(veterinarian);
+        final VeterinarianController.AddRequest request = new VeterinarianController.AddRequest();
+        request.setName(name);
+        request.setSpecialisations(specialisations);
         //when
-        final Response response = controller.add(name, specialisations);
+        final Response response = controller.add(request);
         //then
         assertThat(response.getStatusInfo().toEnum()).isEqualTo(Response.Status.CREATED);
         final URI uri = response.getLocation();

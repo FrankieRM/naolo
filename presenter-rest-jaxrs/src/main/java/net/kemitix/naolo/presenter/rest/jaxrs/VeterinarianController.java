@@ -21,14 +21,18 @@
 
 package net.kemitix.naolo.presenter.rest.jaxrs;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.kemitix.naolo.core.VeterinarianAdd;
 import net.kemitix.naolo.entities.VetSpecialisation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Objects;
@@ -40,6 +44,7 @@ import java.util.concurrent.ExecutionException;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@Slf4j
 @Path("/vet")
 @ApplicationScoped
 public class VeterinarianController {
@@ -66,22 +71,36 @@ public class VeterinarianController {
     /**
      * Add a new Veterinarian.
      *
-     * @param name            the name of the new Veterinarian
-     * @param specialisations the specialisations of the new veterinarian
+     * @param addRequest the add request
      * @return the response
      * @throws ExecutionException   if there is an error completing the request
      * @throws InterruptedException if there is an error completing the request
      */
     @POST
-    public final Response add(
-            @QueryParam("name") final String name,
-            @QueryParam("specialisations") final Set<VetSpecialisation> specialisations
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response add(
+            final AddRequest addRequest
     ) throws ExecutionException, InterruptedException {
-        return Response.created(
-                URI.create("/vet/" + addUseCase.invoke(new VeterinarianAdd.Request(name, specialisations))
-                        .thenApply(VeterinarianAdd.Response::getId)
-                        .get()))
-                .build();
+        log.info("add: {}, {}", addRequest.name, addRequest.specialisations);
+        final VeterinarianAdd.Request request =
+                new VeterinarianAdd.Request(addRequest.name, addRequest.specialisations);
+        return addUseCase.invoke(request)
+                .thenApply(VeterinarianAdd.Response::getId)
+                .thenApply(String::valueOf)
+                .thenApply(id -> "/vet/" + id)
+                .thenApply(URI::create)
+                .thenApply(Response::created)
+                .thenApply(Response.ResponseBuilder::build)
+                .get();
     }
 
+    /**
+     * Request body for adding a Vet.
+     */
+    @Setter
+    @NoArgsConstructor
+    static class AddRequest {
+        private String name;
+        private Set<VetSpecialisation> specialisations;
+    }
 }
