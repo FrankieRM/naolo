@@ -1,4 +1,4 @@
-create sequence hibernate_sequence start with 1 increment by 1;
+create sequence hibernate_sequence start with 11 increment by 1;
 create table vet_specialisations (value varchar(255) not null, primary key (value));
 create table veterinarians (id bigint not null, name varchar(255), primary key (id));
 create table veterinarians_vet_specialisations (VeterinarianJPA_id bigint not null, specialisations_value varchar(255) not null, primary key (VeterinarianJPA_id, specialisations_value));
