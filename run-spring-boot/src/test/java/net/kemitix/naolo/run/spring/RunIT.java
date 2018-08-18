@@ -7,9 +7,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.stream.IntStream;
 
@@ -17,8 +17,7 @@ import static java.lang.String.format;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration Tests.
@@ -58,11 +57,11 @@ class RunIT implements WithAssertions {
     @Test
     void AddVet() throws Exception {
         mvc.perform(post("/vet")
-                .param("name", "New Name")
-                .param("specialisations", "SURGERY")
-                .param("specialisations", "DENTISTRY"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"New Name\",\"specialisations\":[\"SURGERY\", \"DENTISTRY\"]}"))
                 .andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/vet/11"));
+                .andExpect(redirectedUrl("/vet/11"));
     }
 
 }

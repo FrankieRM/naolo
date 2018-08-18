@@ -21,24 +21,32 @@
 
 package net.kemitix.naolo.presenter.rest.spring;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.kemitix.naolo.core.VeterinarianAdd;
 import net.kemitix.naolo.entities.VetSpecialisation;
+import net.kemitix.naolo.entities.Veterinarian;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * REST Controller for individual Veterinarians.
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@Slf4j
 @RestController
 @RequestMapping("/vet")
 @RequiredArgsConstructor
@@ -49,23 +57,42 @@ public class VeterinarianController {
     /**
      * List all Veterinarians endpoint.
      *
-     * @param name            the name of the new veterinarian
-     * @param specialisations the specialisations of the new veterinarian
+     * @param request the request
      * @return the response
      * @throws ExecutionException   if there is an error completing the request
      * @throws InterruptedException if there is an error completing the request
      */
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Void> add(
-            @RequestParam("name") final String name,
-            @RequestParam("specialisations") final Set<VetSpecialisation> specialisations
+            @RequestBody final AddRequest request
     ) throws ExecutionException, InterruptedException {
-        final VeterinarianAdd.Request request = new VeterinarianAdd.Request(name, specialisations);
-        final URI uri = add.invoke(request)
+        log.info("add: {}, {}", request.name, request.specialisations);
+        final URI uri = add.invoke(new VeterinarianAdd.Request(request.name, request.specialisations))
                 .thenApply(VeterinarianAdd.Response::getId)
-                .thenApply(id -> URI.create("/vet/" + id))
+                .thenApply(id -> linkTo(methodOn(VeterinarianController.class).get(id)).toUri())
                 .get();
         return ResponseEntity.created(uri).build();
     }
 
+    /**
+     * Get a Veterinarian endpoint.
+     *
+     * @param id the ID of the Vet
+     * @return the response
+     */
+    @GetMapping("/{id}")
+    ResponseEntity<Veterinarian> get(@PathVariable("id") final Long id) {
+        return null;
+    }
+
+    /**
+     * Request body for adding a Vet.
+     */
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class AddRequest {
+        private String name;
+        private Set<VetSpecialisation> specialisations = new HashSet<>();
+    }
 }

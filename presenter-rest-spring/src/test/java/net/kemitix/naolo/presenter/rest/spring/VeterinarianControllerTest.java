@@ -6,6 +6,7 @@ import net.kemitix.naolo.core.VeterinarianRepository;
 import net.kemitix.naolo.entities.VetSpecialisation;
 import net.kemitix.naolo.entities.Veterinarian;
 import org.assertj.core.api.WithAssertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -28,6 +29,31 @@ class VeterinarianControllerTest implements WithAssertions {
                 .set().ofMinSize(0).ofMaxSize(VetSpecialisation.values().length);
     }
 
+    @Test
+    void addRequestHasNoArgsConstructor() {
+        assertThat(new VeterinarianController.AddRequest()).isNotNull();
+    }
+
+    @Property
+    void addRequestHasNameSetter(
+            @ForAll final String name
+    ) {
+        //given
+        final VeterinarianController.AddRequest addRequest = new VeterinarianController.AddRequest();
+        //then
+        assertThatCode(() -> addRequest.setName(name)).doesNotThrowAnyException();
+    }
+
+    @Property
+    void addRequestHasSpecficationsSetter(
+            @ForAll("specialisations") final Set<VetSpecialisation> specialisations
+    ) {
+        //given
+        final VeterinarianController.AddRequest addRequest = new VeterinarianController.AddRequest();
+        //then
+        assertThatCode(() -> addRequest.setSpecialisations(specialisations)).doesNotThrowAnyException();
+    }
+
     @Property
     void invokesAdd(
             @ForAll final Long id,
@@ -37,11 +63,22 @@ class VeterinarianControllerTest implements WithAssertions {
         //given
         final Veterinarian veterinarian = new Veterinarian(id, name, specialisations);
         given(repository.create(name, specialisations)).willReturn(veterinarian);
+        final VeterinarianController.AddRequest request = new VeterinarianController.AddRequest(name, specialisations);
         //when
-        final ResponseEntity<Void> responseEntity = controller.add(name, specialisations);
+        final ResponseEntity<Void> responseEntity = controller.add(request);
         //then
         assertThat(responseEntity.getStatusCode()).isSameAs(HttpStatus.CREATED);
         assertThat(responseEntity.getHeaders().getLocation())
                 .isEqualTo(URI.create("/vet/" + id));
+    }
+
+    @Property
+    void invokesGet(
+            @ForAll final Long id
+    ) {
+        //when
+        final ResponseEntity<Veterinarian> responseEntity = controller.get(id);
+        //then
+        assertThat(responseEntity).as("temporary until implemented").isNull();
     }
 }
