@@ -59,13 +59,10 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
      */
     @Inject
     VeterinarianRepositoryImpl(final EntityManager entityManager) {
-        log.debug("Create Veterinarian Repository");
+        log.info("Create Veterinarian Repository");
         this.entityManager = Objects.requireNonNull(entityManager, "EntityManager");
     }
 
-    /**
-     * Converts VeterinarianJPA to core entity type.
-     */
     private static Veterinarian fromJPA(final VeterinarianJPA source) {
         log.trace("fromJPA: {} - {}", source.getId(), source.getName());
         return Veterinarian.create(
@@ -85,7 +82,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
      */
     @Override
     public Stream<Veterinarian> findAll() {
-        log.debug("findAll: Find all veterinarians");
+        log.info("findAll: Find all veterinarians");
         return entityManager
                 .createNamedQuery(VeterinarianJPA.FIND_ALL_VETS, Veterinarian.class)
                 .getResultStream();
@@ -98,7 +95,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
                 .map(VetSpecialisationJPA::new).collect(Collectors.toSet());
         final VeterinarianJPA veterinarianJPA = new VeterinarianJPA(null, name, specialisationsJPA);
         final VeterinarianJPA saved = entityManager.merge(veterinarianJPA);
-        log.debug("created: Created Veterinarian id:{} '{}'", saved.getId(), name);
+        log.info("created: Created Veterinarian id:{} '{}'", saved.getId(), saved.getName());
         return fromJPA(saved);
     }
 

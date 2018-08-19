@@ -48,7 +48,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
      * @param repository the Spring Data repository
      */
     VeterinarianRepositoryImpl(final VeterinarianRepositorySpring repository) {
-        log.debug("Create Veterinarian Repository");
+        log.info("Create Veterinarian Repository");
         this.repository = repository;
     }
 
@@ -56,6 +56,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
      * Converts VeterinarianJPA to core entity type.
      */
     private static Veterinarian fromJPA(final VeterinarianJPA source) {
+        log.trace("fromJPA: {} - {}", source.getId(), source.getName());
         return Veterinarian.create(
                 source.getId(),
                 source.getName(),
@@ -75,7 +76,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
     public Veterinarian create(final String name, final Set<VetSpecialisation> specialisations) {
         log.debug("create: Creating Veterinarian '{}' with specialisations {}", name, specialisations);
         final VeterinarianJPA saved = repository.save(new VeterinarianJPA(null, name, specialisations));
-        log.debug("created: Created Veterinarian id:{} '{}'", saved.getId(), name);
+        log.info("created: Created Veterinarian id:{} '{}'", saved.getId(), name);
         return fromJPA(saved);
     }
 

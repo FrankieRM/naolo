@@ -59,7 +59,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
      */
     @Inject
     VeterinarianRepositoryImpl(final VeterinarianRepositoryDeltaSpike repository) {
-        log.debug("Create Veterinarian Repository");
+        log.info("Create Veterinarian Repository");
         this.repository = Objects.requireNonNull(repository, "DeltaSpike Veterinarian Repository");
     }
 
@@ -68,7 +68,8 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
         return Veterinarian.create(
                 source.getId(),
                 source.getName(),
-                source.getSpecialisations().stream()
+                source.getSpecialisations()
+                        .stream()
                         .map(VetSpecialisationJPA::getValue)
                         .collect(Collectors.toSet()));
     }
@@ -94,7 +95,7 @@ class VeterinarianRepositoryImpl implements VeterinarianRepository {
                 .map(VetSpecialisationJPA::new).collect(Collectors.toSet());
         final VeterinarianJPA veterinarianJPA = new VeterinarianJPA(null, name, specialisationsJPA);
         final VeterinarianJPA saved = repository.save(veterinarianJPA);
-        log.debug("created: Created Veterinarian id:{} '{}'", saved.getId(), name);
+        log.info("created: Created Veterinarian id:{} '{}'", saved.getId(), name);
         return fromJPA(saved);
     }
 
