@@ -70,6 +70,7 @@ public class VeterinarianController {
         final URI uri = add.invoke(new VeterinarianAdd.Request(request.name, request.specialisations))
                 .thenApply(VeterinarianAdd.Response::getId)
                 .thenApply(id -> linkTo(methodOn(VeterinarianController.class).get(id)).toUri())
+                .thenApply(url -> URI.create(url.getPath()))
                 .get();
         return ResponseEntity.created(uri).build();
     }
