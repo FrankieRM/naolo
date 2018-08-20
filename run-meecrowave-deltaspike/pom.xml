@@ -95,6 +95,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- testing -->
+        <dependency>
+            <groupId>net.kemitix.naolo</groupId>
+            <artifactId>test</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
