@@ -43,6 +43,7 @@
         <jersey-test-framework.version>2.27</jersey-test-framework.version>
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>2.11.1</log4j.version>
+        <okhttp.version>3.11.0</okhttp.version>
     </properties>
 
     <dependencyManagement>
@@ -200,9 +201,14 @@
                 <version>${jqwik.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-                <artifactId>jersey-test-framework-provider-jdk-http</artifactId>
-                <version>${jersey-test-framework.version}</version>
+                <groupId>org.apache.meecrowave</groupId>
+                <artifactId>meecrowave-junit</artifactId>
+                <version>${meecrowave.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
             </dependency>
 
         </dependencies>
