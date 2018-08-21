@@ -95,7 +95,7 @@
         <!-- testing -->
         <dependency>
             <groupId>net.kemitix.naolo</groupId>
-            <artifactId>test</artifactId>
+            <artifactId>test-meecrowave</artifactId>
             <scope>test</scope>
         </dependency>
 

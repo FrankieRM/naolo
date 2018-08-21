@@ -1,7 +1,7 @@
 package net.kemitix.naolo.run.meecrowave.deltaspike;
 
-import net.kemitix.naolo.test.AbstractMeecrowaveTest;
 import net.kemitix.naolo.test.RunIT;
+import net.kemitix.naolo.test.meecrowave.AbstractMeecrowaveTest;
 import org.apache.meecrowave.Meecrowave;
 import org.apache.meecrowave.junit5.MeecrowaveConfig;
 import org.apache.meecrowave.testing.ConfigurationInject;

@@ -97,6 +97,11 @@
                 <artifactId>test</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.kemitix.naolo</groupId>
+                <artifactId>test-meecrowave</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- Java 9+ compatibility -->
             <dependency>

@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.naolo.test;
+package net.kemitix.naolo.test.meecrowave;
 
 import okhttp3.*;
 import org.apache.meecrowave.Meecrowave;
