@@ -45,7 +45,7 @@ public class DataConfig {
     @GatewayPersistenceUnitName
     public String gatewayUnitName() {
         final String unitName = getClass().getPackage().getName();
-        log.debug("Define Gateway Unit Name: {}", unitName);
+        log.info("Define Gateway Unit Name: {}", unitName);
         return unitName;
     }
 
