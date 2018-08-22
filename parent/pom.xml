@@ -30,6 +30,7 @@
         <javax.persistence.version>2.2</javax.persistence.version>
         <hibernate.version>5.4.1.Final</hibernate.version>
         <h2.version>1.4.199</h2.version>
+        <owb.version>2.0.6</owb.version>
         <meecrowave.version>1.2.7</meecrowave.version>
 
         <junit.version>5.4.0</junit.version>
@@ -134,6 +135,24 @@
                 <artifactId>geronimo-jcdi_2.0_spec</artifactId>
                 <version>${geronimo-jcdi_2.0_spec.version}</version>
             </dependency>
+
+            <!-- OpenWebBeans -->
+            <dependency>
+                <groupId>org.apache.openwebbeans</groupId>
+                <artifactId>openwebbeans-spi</artifactId>
+                <version>${owb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openwebbeans</groupId>
+                <artifactId>openwebbeans-impl</artifactId>
+                <version>${owb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openwebbeans</groupId>
+                <artifactId>openwebbeans-web</artifactId>
+                <version>${owb.version}</version>
+            </dependency>
+
 
             <!-- Meecrowave -->
             <dependency>
