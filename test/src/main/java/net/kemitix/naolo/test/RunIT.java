@@ -32,17 +32,13 @@ public interface RunIT {
 
     /**
      * Test that a list of vets is returned.
-     *
-     * @throws Exception if there is an unhandled error
      */
     @Test
-    void getAllVets() throws Exception;
+    void getAllVets();
 
     /**
      * Test that a vet is added.
-     *
-     * @throws Exception if there is an unhandled error
      */
     @Test
-    void addVet() throws Exception;
+    void addVet();
 }

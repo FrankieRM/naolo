@@ -44,27 +44,31 @@ class SpringBootRunIT implements WithAssertions, RunIT {
 
     @Override
     @Test
-    public void getAllVets() throws Exception {
-        mvc.perform(get("/vets/"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(new AssertionMatcher<String>() {
-                    @Override
-                    public void assertion(String actual) throws AssertionError {
-                        assertSoftly(s -> IntStream.rangeClosed(1, 10).forEach(i ->
-                                s.assertThat(actual).contains(format("{\"id\":%d,", i))));
-                    }
-                }));
+    public void getAllVets() {
+        assertThatCode(() ->
+                mvc.perform(get("/vets/"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().string(new AssertionMatcher<String>() {
+                            @Override
+                            public void assertion(String actual) throws AssertionError {
+                                assertSoftly(s -> IntStream.rangeClosed(1, 10).forEach(i ->
+                                        s.assertThat(actual).contains(format("{\"id\":%d,", i))));
+                            }
+                        })))
+                .doesNotThrowAnyException();
     }
 
     @Override
     @Test
-    public void addVet() throws Exception {
-        mvc.perform(post("/vet")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"New Name\",\"specialisations\":[\"SURGERY\", \"DENTISTRY\"]}"))
-                .andExpect(status().isCreated())
-                .andExpect(redirectedUrl("/vet/11"));
+    public void addVet() {
+        assertThatCode(() ->
+                mvc.perform(post("/vet")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"New Name\",\"specialisations\":[\"SURGERY\", \"DENTISTRY\"]}"))
+                        .andExpect(status().isCreated())
+                        .andExpect(redirectedUrl("/vet/11")))
+                .doesNotThrowAnyException();
     }
 
 }

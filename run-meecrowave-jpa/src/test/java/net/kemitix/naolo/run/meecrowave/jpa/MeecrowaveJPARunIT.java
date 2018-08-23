@@ -8,8 +8,6 @@ import org.apache.meecrowave.testing.ConfigurationInject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 @MeecrowaveConfig()
 public class MeecrowaveJPARunIT extends AbstractMeecrowaveTest implements RunIT {
 
@@ -23,14 +21,16 @@ public class MeecrowaveJPARunIT extends AbstractMeecrowaveTest implements RunIT 
 
     @Test
     @Override
-    public void getAllVets() throws IOException {
-        doGetAllVetsTest();
+    public void getAllVets() {
+        assertThatCode(this::doGetAllVetsTest)
+                .doesNotThrowAnyException();
     }
 
     @Test
     @Override
-    public void addVet() throws IOException {
-        doAddVetTest();
+    public void addVet() {
+        assertThatCode(this::doAddVetTest)
+                .doesNotThrowAnyException();
     }
 
 }
