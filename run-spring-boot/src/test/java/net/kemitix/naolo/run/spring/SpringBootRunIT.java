@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 Main.class
         })
 @AutoConfigureMockMvc
-class RunIT implements WithAssertions {
+class SpringBootRunIT implements WithAssertions {
 
     @Autowired
     MockMvc mvc;
