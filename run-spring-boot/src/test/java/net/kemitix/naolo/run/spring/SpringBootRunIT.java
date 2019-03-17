@@ -1,5 +1,6 @@
 package net.kemitix.naolo.run.spring;
 
+import net.kemitix.naolo.test.RunIT;
 import org.assertj.core.api.WithAssertions;
 import org.assertj.core.matcher.AssertionMatcher;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 Main.class
         })
 @AutoConfigureMockMvc
-class SpringBootRunIT implements WithAssertions {
+class SpringBootRunIT implements WithAssertions, RunIT {
 
     @Autowired
     MockMvc mvc;
@@ -41,8 +42,9 @@ class SpringBootRunIT implements WithAssertions {
         assertThat(true).isTrue();
     }
 
+    @Override
     @Test
-    void getAllVets() throws Exception {
+    public void getAllVets() throws Exception {
         mvc.perform(get("/vets/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new AssertionMatcher<String>() {
@@ -54,8 +56,9 @@ class SpringBootRunIT implements WithAssertions {
                 }));
     }
 
+    @Override
     @Test
-    void AddVet() throws Exception {
+    public void addVet() throws Exception {
         mvc.perform(post("/vet")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
